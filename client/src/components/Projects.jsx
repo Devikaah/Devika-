@@ -35,7 +35,7 @@ const projects = [
     description:
       'Built a Power BI dashboard analyzing Nifty 50 stock market performance from Apr 2024 to Apr 2025 using NSE India data. Tracks all-time highs (26,277), lows (21,281), overall return of +19.79%, and bullish vs bearish day distribution.',
     impact: '57% bullish days identified vs 43% bearish — supporting trend-based investment insights.',
-    image: null,
+    image: 'images/nifty50-dashboard.png' ,
     placeholder: { icon: '📈', label: 'Nifty 50' },
     tags: ['Power BI', 'DAX', 'Stock Analysis', 'NSE Data'],
     color: '#00ff88',
@@ -49,7 +49,7 @@ const projects = [
     description:
       'Designed and developed a user-friendly online doctor appointment booking system. Created the UI/UX in Figma, built the frontend with Next.js, and managed appointment scheduling data with MySQL. Improved usability through user testing sessions.',
     impact: 'Streamlined appointment scheduling, reducing manual booking effort significantly.',
-    image: '/images/nifty50-dashboard.png' ,
+    image: null,
     placeholder: { icon: '🏥', label: 'Curezy' },
     tags: ['Next.js', 'MySQL', 'Figma', 'UI/UX Design'],
     color: '#a78bfa',
