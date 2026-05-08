@@ -45,7 +45,7 @@ const projects = [
   {
     id: 4,
     title: 'Curezy — Doctor Appointment System',
-    subtitle: 'Next.js + MySQL · May 2025',
+    subtitle: 'Next.js + MySQL · May 2026',
     description:
       'Designed and developed a user-friendly online doctor appointment booking system. Created the UI/UX in Figma, built the frontend with Next.js, and managed appointment scheduling data with MySQL. Improved usability through user testing sessions.',
     impact: 'Streamlined appointment scheduling, reducing manual booking effort significantly.',
