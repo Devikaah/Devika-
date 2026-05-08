@@ -31,7 +31,7 @@ const projects = [
   {
     id: 3,
     title: 'Nifty 50 Performance Dashboard',
-    subtitle: 'Power BI · 2025',
+    subtitle: 'Power BI ·  May 2026',
     description:
       'Built a Power BI dashboard analyzing Nifty 50 stock market performance from Apr 2024 to Apr 2025 using NSE India data. Tracks all-time highs (26,277), lows (21,281), overall return of +19.79%, and bullish vs bearish day distribution.',
     impact: '57% bullish days identified vs 43% bearish — supporting trend-based investment insights.',
@@ -45,7 +45,7 @@ const projects = [
   {
     id: 4,
     title: 'Curezy — Doctor Appointment System',
-    subtitle: 'Next.js + MySQL · May 2026',
+    subtitle: 'Next.js + MySQL · May 2025',
     description:
       'Designed and developed a user-friendly online doctor appointment booking system. Created the UI/UX in Figma, built the frontend with Next.js, and managed appointment scheduling data with MySQL. Improved usability through user testing sessions.',
     impact: 'Streamlined appointment scheduling, reducing manual booking effort significantly.',
