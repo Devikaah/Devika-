@@ -1,136 +1,167 @@
-import React, { useEffect, useState } from 'react';
-import Navbar from './components/Navbar';
-import Hero from './components/Hero';
-import About from './components/About';
-import Skills from './components/Skills';
-import Projects from './components/Projects';
-import Experience from './components/Experience';
-import Certifications from './components/Certifications';
-import Contact from './components/Contact';
+import React, { useState, useEffect, useCallback } from 'react';
+import Cursor from './components/Cursor';
+import Nav from './components/Nav';
+import Hero from './components/sections/Hero';
+import About from './components/sections/About';
+import Skills from './components/sections/Skills';
+import Projects from './components/sections/Projects';
+import Experience from './components/sections/Experience';
+import Contact from './components/sections/Contact';
 
-const PARTICLES = Array.from({ length: 30 }, (_, i) => ({
-  id: i,
-  left: `${Math.random() * 100}%`,
-  size: `${Math.random() * 3 + 1}px`,
-  duration: `${Math.random() * 15 + 10}s`,
-  delay: `${Math.random() * 15}s`,
-  opacity: Math.random() * 0.4 + 0.1,
-}));
-
-function BackToTop() {
-  const [show, setShow] = useState(false);
-  useEffect(() => {
-    const handler = () => setShow(window.scrollY > 500);
-    window.addEventListener('scroll', handler);
-    return () => window.removeEventListener('scroll', handler);
-  }, []);
-  return (
-    <button
-      onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-      style={{
-        position: 'fixed',
-        bottom: 32,
-        right: 32,
-        width: 48,
-        height: 48,
-        borderRadius: '50%',
-        background: 'var(--accent-cyan-dim)',
-        border: '1px solid var(--glass-border)',
-        color: 'var(--accent-teal)',
-        fontSize: 20,
-        cursor: 'pointer',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        opacity: show ? 1 : 0,
-        pointerEvents: show ? 'auto' : 'none',
-        transform: show ? 'translateY(0)' : 'translateY(16px)',
-        transition: 'all 0.4s ease',
-        zIndex: 999,
-        backdropFilter: 'blur(16px)',
-        boxShadow: show ? '0 4px 24px var(--accent-glow)' : 'none',
-      }}
-      aria-label="Back to top"
-    >
-      ↑
-    </button>
-  );
-}
+const SECTIONS = [Hero, About, Skills, Projects, Experience, Contact];
+const TOTAL = SECTIONS.length;
 
 export default function App() {
+  const [current, setCurrent]   = useState(0);
+  const [loading, setLoading]   = useState(true);
+  const [isMobile, setIsMobile] = useState(false);
 
-  // 3D Tilt Effect
+  // Detect mobile
   useEffect(() => {
-    const cards = document.querySelectorAll('.glass-card');
-
-    const handleMouseMove = (e) => {
-      const card = e.currentTarget;
-      const rect = card.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-      const centerX = rect.width / 2;
-      const centerY = rect.height / 2;
-      const rotateX = ((y - centerY) / centerY) * -8;
-      const rotateY = ((x - centerX) / centerX) * 8;
-      card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-4px)`;
-      card.style.boxShadow = `${-rotateY * 2}px ${rotateX * 2}px 40px rgba(38,70,83,0.15)`;
-    };
-
-    const handleMouseLeave = (e) => {
-      const card = e.currentTarget;
-      card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0)';
-      card.style.boxShadow = '';
-    };
-
-    cards.forEach(card => {
-      card.addEventListener('mousemove', handleMouseMove);
-      card.addEventListener('mouseleave', handleMouseLeave);
-    });
-
-    return () => {
-      cards.forEach(card => {
-        card.removeEventListener('mousemove', handleMouseMove);
-        card.removeEventListener('mouseleave', handleMouseLeave);
-      });
-    };
+    setIsMobile(window.innerWidth < 768);
+    const r = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', r);
+    return () => window.removeEventListener('resize', r);
   }, []);
+
+  // Hide loader
+  useEffect(() => {
+    const t = setTimeout(() => setLoading(false), 1800);
+    return () => clearTimeout(t);
+  }, []);
+
+  const goTo = useCallback((idx) => {
+    if (idx < 0 || idx >= TOTAL) return;
+    setCurrent(idx);
+  }, []);
+
+  // Keyboard navigation
+  useEffect(() => {
+    const onKey = (e) => {
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') goTo(current + 1);
+      if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   goTo(current - 1);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [current, goTo]);
+
+  // Mouse wheel navigation (debounced)
+  useEffect(() => {
+    let locked = false;
+    const onWheel = (e) => {
+      if (locked) return;
+      locked = true;
+      if (e.deltaY > 40)  goTo(current + 1);
+      if (e.deltaY < -40) goTo(current - 1);
+      setTimeout(() => { locked = false; }, 1100);
+    };
+    window.addEventListener('wheel', onWheel, { passive: true });
+    return () => window.removeEventListener('wheel', onWheel);
+  }, [current, goTo]);
+
+  // Touch swipe
+  useEffect(() => {
+    let startY = 0;
+    const onStart = (e) => { startY = e.touches[0].clientY; };
+    const onEnd   = (e) => {
+      const dy = startY - e.changedTouches[0].clientY;
+      if (dy > 50)  goTo(current + 1);
+      if (dy < -50) goTo(current - 1);
+    };
+    window.addEventListener('touchstart', onStart);
+    window.addEventListener('touchend',   onEnd);
+    return () => {
+      window.removeEventListener('touchstart', onStart);
+      window.removeEventListener('touchend',   onEnd);
+    };
+  }, [current, goTo]);
+
+  const getState = (idx) => {
+    if (idx === current) return 'active';
+    if (idx < current)  return 'before';
+    return 'after';
+  };
 
   return (
     <>
-      <div className="grid-overlay" />
-      <div className="bg-orbs">
-        <div className="orb orb-1" />
-        <div className="orb orb-2" />
-        <div className="orb orb-3" />
-        <div className="orb orb-4" />
-      </div>
-      <div className="particles">
-        {PARTICLES.map((p) => (
-          <div
-            key={p.id}
-            className="particle"
-            style={{
-              left: p.left,
-              width: p.size,
-              height: p.size,
-              animationDuration: p.duration,
-              animationDelay: p.delay,
-              opacity: 0,
-            }}
-          />
+      {/* Noise texture */}
+      <div className="noise" />
+
+      {/* Custom cursor (desktop only) */}
+      {!isMobile && <Cursor />}
+
+      {/* Loading screen */}
+      {loading && (
+        <div className="loader">
+          <div className="loader-name">
+            {'DEVIKA KG'.split('').map((c, i) => (
+              <span key={i}>{c === ' ' ? '\u00A0' : c}</span>
+            ))}
+          </div>
+          <div className="loader-bar-wrap">
+            <div className="loader-bar" />
+          </div>
+        </div>
+      )}
+
+      {/* Navigation */}
+      {!loading && (
+        <Nav current={current} total={TOTAL} goTo={goTo} />
+      )}
+
+      {/* Sections */}
+      <div className="sections-wrapper">
+        {SECTIONS.map((Section, i) => (
+          <div key={i} className={`slide-section state-${getState(i)}`}>
+            <Section active={current === i} goTo={goTo} />
+          </div>
         ))}
       </div>
-      <Navbar />
-      <main>
-        <Hero />
-        <About />
-        <Skills />
-        <Projects />
-        <Experience />
-        <Certifications />
-        <Contact />
-      </main>
-      <BackToTop />
+
+      {/* Side dot navigation */}
+      {!loading && (
+        <div className="side-dots">
+          {SECTIONS.map((_, i) => (
+            <button
+              key={i}
+              className={`side-dot ${current === i ? 'active' : ''}`}
+              onClick={() => goTo(i)}
+              aria-label={`Go to section ${i + 1}`}
+            />
+          ))}
+        </div>
+      )}
+
+      <style>{`
+        .side-dots {
+          position: fixed;
+          right: 32px;
+          top: 50%;
+          transform: translateY(-50%);
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+          z-index: 400;
+        }
+        .side-dot {
+          width: 6px; height: 6px;
+          border-radius: 50%;
+          background: rgba(17,17,17,0.2);
+          border: none; cursor: none;
+          transition: all 0.4s var(--ease);
+          padding: 0;
+        }
+        .side-dot.active {
+          background: var(--accent);
+          transform: scale(1.4);
+          box-shadow: 0 0 8px rgba(201,168,76,0.5);
+        }
+        .side-dot:hover { background: var(--text); }
+        @media (max-width: 768px) {
+          .side-dots { display: none; }
+          .side-dot { cursor: pointer; }
+        }
+      `}</style>
     </>
   );
 }
