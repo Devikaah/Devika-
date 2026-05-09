@@ -53,6 +53,16 @@ export default function App() {
   // Mouse wheel
   useEffect(() => {
     const onWheel = (e) => {
+      const target = e.target;
+      const scrollable = target.closest('.section-inner');
+
+      if (scrollable) {
+        const atBottom = scrollable.scrollTop + scrollable.clientHeight >= scrollable.scrollHeight - 5;
+        const atTop = scrollable.scrollTop <= 5;
+        if (e.deltaY > 0 && !atBottom) return;
+        if (e.deltaY < 0 && !atTop) return;
+      }
+
       e.preventDefault();
       if (e.deltaY > 20)  goTo(currentRef.current + 1);
       if (e.deltaY < -20) goTo(currentRef.current - 1);

@@ -327,3 +327,14 @@ body {
   .nav-links { gap: 16px; }
   .nav-btn { font-size: 11px; }
 }
+/* ── INTERNAL SECTION SCROLL FIX ───────────── */
+.section-inner {
+  overflow-y: auto !important;
+}
+
+.section-inner::-webkit-scrollbar { width: 3px; }
+.section-inner::-webkit-scrollbar-track { background: transparent; }
+.section-inner::-webkit-scrollbar-thumb {
+  background: var(--accent2);
+  border-radius: 2px;
+}
