@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import Cursor from './components/Cursor';
 import Nav from './components/Nav';
 import Hero from './components/sections/Hero';
@@ -15,8 +15,11 @@ export default function App() {
   const [current, setCurrent]   = useState(0);
   const [loading, setLoading]   = useState(true);
   const [isMobile, setIsMobile] = useState(false);
+  const locked = useRef(false);
+  const currentRef = useRef(0);
 
-  // Detect mobile
+  useEffect(() => { currentRef.current = current; }, [current]);
+
   useEffect(() => {
     setIsMobile(window.innerWidth < 768);
     const r = () => setIsMobile(window.innerWidth < 768);
@@ -24,7 +27,6 @@ export default function App() {
     return () => window.removeEventListener('resize', r);
   }, []);
 
-  // Hide loader
   useEffect(() => {
     const t = setTimeout(() => setLoading(false), 1800);
     return () => clearTimeout(t);
@@ -32,49 +34,56 @@ export default function App() {
 
   const goTo = useCallback((idx) => {
     if (idx < 0 || idx >= TOTAL) return;
+    if (locked.current) return;
+    locked.current = true;
     setCurrent(idx);
+    setTimeout(() => { locked.current = false; }, 1100);
   }, []);
 
-  // Keyboard navigation
+  // Keyboard
   useEffect(() => {
     const onKey = (e) => {
-      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') goTo(current + 1);
-      if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   goTo(current - 1);
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') goTo(currentRef.current + 1);
+      if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   goTo(currentRef.current - 1);
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [current, goTo]);
+  }, [goTo]);
 
-  // Mouse wheel navigation (debounced)
+  // Mouse wheel
   useEffect(() => {
-    let locked = false;
     const onWheel = (e) => {
-      if (locked) return;
-      locked = true;
-      if (e.deltaY > 40)  goTo(current + 1);
-      if (e.deltaY < -40) goTo(current - 1);
-      setTimeout(() => { locked = false; }, 1100);
+      e.preventDefault();
+      if (e.deltaY > 20)  goTo(currentRef.current + 1);
+      if (e.deltaY < -20) goTo(currentRef.current - 1);
     };
-    window.addEventListener('wheel', onWheel, { passive: true });
+    window.addEventListener('wheel', onWheel, { passive: false });
     return () => window.removeEventListener('wheel', onWheel);
-  }, [current, goTo]);
+  }, [goTo]);
 
   // Touch swipe
   useEffect(() => {
     let startY = 0;
-    const onStart = (e) => { startY = e.touches[0].clientY; };
-    const onEnd   = (e) => {
+    let startX = 0;
+    const onStart = (e) => {
+      startY = e.touches[0].clientY;
+      startX = e.touches[0].clientX;
+    };
+    const onEnd = (e) => {
       const dy = startY - e.changedTouches[0].clientY;
-      if (dy > 50)  goTo(current + 1);
-      if (dy < -50) goTo(current - 1);
+      const dx = startX - e.changedTouches[0].clientX;
+      if (Math.abs(dy) > Math.abs(dx)) {
+        if (dy > 40)  goTo(currentRef.current + 1);
+        if (dy < -40) goTo(currentRef.current - 1);
+      }
     };
     window.addEventListener('touchstart', onStart);
-    window.addEventListener('touchend',   onEnd);
+    window.addEventListener('touchend', onEnd);
     return () => {
       window.removeEventListener('touchstart', onStart);
-      window.removeEventListener('touchend',   onEnd);
+      window.removeEventListener('touchend', onEnd);
     };
-  }, [current, goTo]);
+  }, [goTo]);
 
   const getState = (idx) => {
     if (idx === current) return 'active';
@@ -84,13 +93,9 @@ export default function App() {
 
   return (
     <>
-      {/* Noise texture */}
       <div className="noise" />
-
-      {/* Custom cursor (desktop only) */}
       {!isMobile && <Cursor />}
 
-      {/* Loading screen */}
       {loading && (
         <div className="loader">
           <div className="loader-name">
@@ -104,12 +109,8 @@ export default function App() {
         </div>
       )}
 
-      {/* Navigation */}
-      {!loading && (
-        <Nav current={current} total={TOTAL} goTo={goTo} />
-      )}
+      {!loading && <Nav current={current} total={TOTAL} goTo={goTo} />}
 
-      {/* Sections */}
       <div className="sections-wrapper">
         {SECTIONS.map((Section, i) => (
           <div key={i} className={`slide-section state-${getState(i)}`}>
@@ -118,7 +119,6 @@ export default function App() {
         ))}
       </div>
 
-      {/* Side dot navigation */}
       {!loading && (
         <div className="side-dots">
           {SECTIONS.map((_, i) => (
@@ -134,32 +134,25 @@ export default function App() {
 
       <style>{`
         .side-dots {
-          position: fixed;
-          right: 32px;
-          top: 50%;
+          position: fixed; right: 32px; top: 50%;
           transform: translateY(-50%);
-          display: flex;
-          flex-direction: column;
-          gap: 10px;
+          display: flex; flex-direction: column; gap: 10px;
           z-index: 400;
         }
         .side-dot {
-          width: 6px; height: 6px;
-          border-radius: 50%;
-          background: rgba(17,17,17,0.2);
-          border: none; cursor: none;
-          transition: all 0.4s var(--ease);
-          padding: 0;
+          width: 6px; height: 6px; border-radius: 50%;
+          background: rgba(123,29,29,0.2);
+          border: none; cursor: pointer;
+          transition: all 0.4s var(--ease); padding: 0;
         }
         .side-dot.active {
           background: var(--accent);
-          transform: scale(1.4);
-          box-shadow: 0 0 8px rgba(201,168,76,0.5);
+          transform: scale(1.5);
+          box-shadow: 0 0 8px rgba(123,29,29,0.4);
         }
-        .side-dot:hover { background: var(--text); }
+        .side-dot:hover { background: var(--accent); }
         @media (max-width: 768px) {
-          .side-dots { display: none; }
-          .side-dot { cursor: pointer; }
+          .side-dots { right: 16px; }
         }
       `}</style>
     </>
