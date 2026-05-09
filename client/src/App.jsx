@@ -8,7 +8,6 @@ import Experience from './components/Experience';
 import Certifications from './components/Certifications';
 import Contact from './components/Contact';
 
-// Generate particle data once
 const PARTICLES = Array.from({ length: 30 }, (_, i) => ({
   id: i,
   left: `${Math.random() * 100}%`,
@@ -37,7 +36,7 @@ function BackToTop() {
         borderRadius: '50%',
         background: 'var(--accent-cyan-dim)',
         border: '1px solid var(--glass-border)',
-        color: 'var(--accent-cyan)',
+        color: 'var(--accent-teal)',
         fontSize: 20,
         cursor: 'pointer',
         display: 'flex',
@@ -59,9 +58,45 @@ function BackToTop() {
 }
 
 export default function App() {
+
+  // 3D Tilt Effect
+  useEffect(() => {
+    const cards = document.querySelectorAll('.glass-card');
+
+    const handleMouseMove = (e) => {
+      const card = e.currentTarget;
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const centerX = rect.width / 2;
+      const centerY = rect.height / 2;
+      const rotateX = ((y - centerY) / centerY) * -8;
+      const rotateY = ((x - centerX) / centerX) * 8;
+      card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-4px)`;
+      card.style.boxShadow = `${-rotateY * 2}px ${rotateX * 2}px 40px rgba(38,70,83,0.15)`;
+    };
+
+    const handleMouseLeave = (e) => {
+      const card = e.currentTarget;
+      card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0)';
+      card.style.boxShadow = '';
+    };
+
+    cards.forEach(card => {
+      card.addEventListener('mousemove', handleMouseMove);
+      card.addEventListener('mouseleave', handleMouseLeave);
+    });
+
+    return () => {
+      cards.forEach(card => {
+        card.removeEventListener('mousemove', handleMouseMove);
+        card.removeEventListener('mouseleave', handleMouseLeave);
+      });
+    };
+  }, []);
+
   return (
     <>
-      {/* Background layers */}
       <div className="grid-overlay" />
       <div className="bg-orbs">
         <div className="orb orb-1" />
@@ -85,8 +120,6 @@ export default function App() {
           />
         ))}
       </div>
-
-      {/* App */}
       <Navbar />
       <main>
         <Hero />
