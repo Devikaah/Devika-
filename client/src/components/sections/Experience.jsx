@@ -125,9 +125,8 @@ export default function Experience({ active, goTo }) {
         gap: 40px;
         width: 100%; max-width: 1200px;
         margin: 0 auto;
-        padding-top: 40px;
-        height: calc(100vh - 160px);
-        overflow: hidden;
+        padding-top: 20px;
+        align-items: start;
         }
         .exp-heading {
           font-family: var(--font-d);
@@ -155,15 +154,16 @@ export default function Experience({ active, goTo }) {
         .cert-id {
           font-family: monospace; font-size: 11px;
           color: var(--accent); letter-spacing: 0.05em;
+        }.exp-right { 
+        display: flex; 
+        flex-direction: column; 
+        gap: 20px; 
+        overflow-y: auto; 
+        height: calc(100vh - 220px);
+        padding-right: 8px;
+        padding-bottom: 60px;
         }
-        .exp-right { display: flex; flex-direction: column; gap: 28px; overflow-y: auto; max-height: calc(100vh - 200px); padding-right: 8px; }
-        .exp-item {
-          padding: 28px;
-          background: var(--white);
-          border: 1px solid var(--border);
-          border-radius: 12px;
-          display: flex; flex-direction: column; gap: 16px;
-          transition: transform 0.4s var(--ease), box-shadow 0.4s var(--ease);
+        
         }
         .exp-item:hover {
           transform: translateX(6px);
