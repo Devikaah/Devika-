@@ -37,7 +37,7 @@ const PROJECTS = [
     sub: 'Next.js + MySQL · May 2025',
     desc: 'Online appointment booking system. UI designed in Figma, frontend in Next.js, and appointment data managed with MySQL.',
     tags: ['Next.js', 'MySQL', 'Figma'],
-    img: '/images/curzy.png' ,
+    img: '/images/curzy.jpg' ,
     github: 'https://github.com/Devikaah',
     color: '#9D8F2A',
   },
