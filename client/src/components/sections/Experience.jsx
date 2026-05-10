@@ -120,14 +120,16 @@ export default function Experience({ active, goTo }) {
       <style>{`
         .exp-inner { align-items: flex-start; padding-top: 120px; }
         .exp-layout {
-        display: grid;
-        grid-template-columns: 0.8fr 1.2fr;
-        gap: 40px;
-        width: 100%; max-width: 1200px;
-        margin: 0 auto;
-        padding-top: 20px;
-        align-items: start;
+          display: grid;
+          grid-template-columns: 0.8fr 1.2fr;
+          gap: 40px;
+          width: 100%; max-width: 1200px;
+          margin: 0 auto;
+          padding-top: 40px;
+          align-items: start;
+          height: calc(100vh - 160px);
         }
+        .exp-left { display: flex; flex-direction: column; }
         .exp-heading {
           font-family: var(--font-d);
           font-size: clamp(2.5rem, 5vw, 5rem);
@@ -154,35 +156,47 @@ export default function Experience({ active, goTo }) {
         .cert-id {
           font-family: monospace; font-size: 11px;
           color: var(--accent); letter-spacing: 0.05em;
-        }.exp-right { 
-        display: flex; 
-        flex-direction: column; 
-        gap: 20px; 
-        overflow-y: auto; 
-        height: calc(100vh - 220px);
-        padding-right: 8px;
-        padding-bottom: 60px;
         }
-        
+        .exp-right {
+          display: flex;
+          flex-direction: column;
+          gap: 20px;
+          overflow-y: scroll;
+          height: calc(100vh - 180px);
+          padding-right: 12px;
+          padding-bottom: 80px;
+          -webkit-overflow-scrolling: touch;
+        }
+        .exp-right::-webkit-scrollbar { width: 3px; }
+        .exp-right::-webkit-scrollbar-track { background: transparent; }
+        .exp-right::-webkit-scrollbar-thumb { background: var(--accent2); border-radius: 2px; }
+        .exp-item {
+          padding: 24px;
+          background: var(--white);
+          border: 1px solid var(--border);
+          border-radius: 12px;
+          display: flex; flex-direction: column; gap: 14px;
+          transition: transform 0.4s var(--ease), box-shadow 0.4s var(--ease);
+          flex-shrink: 0;
         }
         .exp-item:hover {
           transform: translateX(6px);
-          box-shadow: 0 8px 32px rgba(0,0,0,0.06);
+          box-shadow: 0 8px 32px rgba(123,29,29,0.08);
         }
         .exp-item-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; flex-wrap: wrap; }
         .exp-role { font-family: var(--font-d); font-size: 16px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
         .exp-co { display: flex; align-items: center; gap: 8px; font-size: 13px; }
-        .co-name { color: var(--accent2); font-weight: 600; }
+        .co-name { color: var(--accent); font-weight: 600; }
         .co-sep { color: var(--muted); }
         .co-loc { color: var(--muted); }
         .exp-right-meta { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
         .exp-period { font-size: 12px; font-weight: 600; color: var(--muted); }
         .exp-status { font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 100px; }
         .exp-status.current { background: rgba(34,197,94,0.1); color: #16a34a; }
-        .exp-status.done { background: rgba(201,168,76,0.1); color: #8a6f1e; }
+        .exp-status.done { background: rgba(123,29,29,0.1); color: var(--accent); }
         .exp-points { list-style: none; display: flex; flex-direction: column; gap: 8px; }
         .exp-points li { display: flex; gap: 10px; font-size: 13px; color: var(--muted); line-height: 1.7; }
-        .pt-arrow { color: var(--accent); font-weight: 700; flex-shrink: 0; }
+        .pt-arrow { color: var(--accent2); font-weight: 700; flex-shrink: 0; }
         .exp-tags { display: flex; flex-wrap: wrap; gap: 8px; }
         .pill {
           display: inline-flex; padding: 5px 14px;
@@ -192,10 +206,10 @@ export default function Experience({ active, goTo }) {
           font-size: 12px; font-weight: 500; color: var(--text);
           transition: all 0.3s;
         }
-        .pill:hover { background: var(--accent); border-color: var(--accent); }
+        .pill:hover { background: var(--accent); border-color: var(--accent); color: var(--white); }
         @media (max-width: 900px) {
-          .exp-layout { grid-template-columns: 1fr; gap: 32px; overflow-y: auto; max-height: calc(100vh - 140px); }
-          .exp-right { max-height: none; overflow-y: visible; }
+          .exp-layout { grid-template-columns: 1fr; height: auto; }
+          .exp-right { height: calc(100vh - 300px); }
         }
       `}</style>
     </div>
