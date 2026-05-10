@@ -78,35 +78,39 @@ export default function Experience({ active, goTo }) {
 
         <div className="exp-right">
           {EXP.map((e, i) => (
-            <div className="reveal-wrap" key={e.co}>
-              <div className="reveal-text exp-item" style={s(`${0.25 + i * 0.15}s`)}>
-                <div className="exp-item-top">
-                  <div>
-                    <div className="exp-role">{e.role}</div>
-                    <div className="exp-co">
-                      <span className="co-name">{e.co}</span>
-                      <span className="co-sep">·</span>
-                      <span className="co-loc">{e.loc}</span>
-                    </div>
-                  </div>
-                  <div className="exp-right-meta">
-                    <div className="exp-period">{e.period}</div>
-                    <div className={`exp-status ${e.status}`}>
-                      {e.status === 'current' ? '● Current' : '✓ Done'}
-                    </div>
+            <div className="exp-item" key={e.co}
+              style={{
+                opacity: shown ? 1 : 0,
+                transform: shown ? 'translateY(0)' : 'translateY(30px)',
+                transition: `opacity 0.6s ease ${0.25 + i * 0.15}s, transform 0.6s ease ${0.25 + i * 0.15}s`,
+              }}
+            >
+              <div className="exp-item-top">
+                <div>
+                  <div className="exp-role">{e.role}</div>
+                  <div className="exp-co">
+                    <span className="co-name">{e.co}</span>
+                    <span className="co-sep">·</span>
+                    <span className="co-loc">{e.loc}</span>
                   </div>
                 </div>
-                <ul className="exp-points">
-                  {e.points.map((pt, pi) => (
-                    <li key={pi}>
-                      <span className="pt-arrow">→</span>
-                      <span>{pt}</span>
-                    </li>
-                  ))}
-                </ul>
-                <div className="exp-tags">
-                  {e.tags.map(t => <span key={t} className="pill">{t}</span>)}
+                <div className="exp-right-meta">
+                  <div className="exp-period">{e.period}</div>
+                  <div className={`exp-status ${e.status}`}>
+                    {e.status === 'current' ? '● Current' : '✓ Done'}
+                  </div>
                 </div>
+              </div>
+              <ul className="exp-points">
+                {e.points.map((pt, pi) => (
+                  <li key={pi}>
+                    <span className="pt-arrow">→</span>
+                    <span>{pt}</span>
+                  </li>
+                ))}
+              </ul>
+              <div className="exp-tags">
+                {e.tags.map(t => <span key={t} className="pill">{t}</span>)}
               </div>
             </div>
           ))}
@@ -118,18 +122,24 @@ export default function Experience({ active, goTo }) {
       </div>
 
       <style>{`
-        .exp-inner { align-items: flex-start; padding-top: 120px; }
+        .exp-inner { 
+          align-items: flex-start; 
+          padding-top: 120px; 
+        }
         .exp-layout {
           display: grid;
           grid-template-columns: 0.8fr 1.2fr;
           gap: 40px;
-          width: 100%; max-width: 1200px;
+          width: 100%; 
+          max-width: 1200px;
           margin: 0 auto;
           padding-top: 40px;
           align-items: start;
-          height: calc(100vh - 160px);
         }
-        .exp-left { display: flex; flex-direction: column; }
+        .exp-left { 
+          display: flex; 
+          flex-direction: column; 
+        }
         .exp-heading {
           font-family: var(--font-d);
           font-size: clamp(2.5rem, 5vw, 5rem);
@@ -143,73 +153,167 @@ export default function Experience({ active, goTo }) {
           color: transparent;
         }
         .cert-card {
-          display: flex; align-items: flex-start; gap: 16px;
+          display: flex; 
+          align-items: flex-start; 
+          gap: 16px;
           padding: 24px;
-          background: var(--white);
-          border: 1px solid var(--border);
-          border-radius: 12px;
+          background: #FFFFFF;
+          border: 1.5px solid rgba(123,29,29,0.15);
+          border-radius: 16px;
           margin-top: 8px;
+          box-shadow: 0 4px 20px rgba(123,29,29,0.06);
         }
         .cert-badge { font-size: 28px; }
-        .cert-name { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
-        .cert-org { font-size: 13px; color: var(--muted); margin-bottom: 6px; }
+        .cert-name { 
+          font-size: 14px; 
+          font-weight: 700; 
+          color: var(--text); 
+          margin-bottom: 4px; 
+        }
+        .cert-org { 
+          font-size: 13px; 
+          color: var(--muted); 
+          margin-bottom: 6px; 
+        }
         .cert-id {
-          font-family: monospace; font-size: 11px;
-          color: var(--accent); letter-spacing: 0.05em;
+          font-family: monospace; 
+          font-size: 11px;
+          color: var(--accent); 
+          letter-spacing: 0.05em;
         }
         .exp-right {
           display: flex;
           flex-direction: column;
-          gap: 20px;
+          gap: 24px;
           overflow-y: scroll;
           height: calc(100vh - 180px);
           padding-right: 12px;
-          padding-bottom: 80px;
+          padding-bottom: 100px;
+          padding-top: 8px;
           -webkit-overflow-scrolling: touch;
         }
         .exp-right::-webkit-scrollbar { width: 3px; }
         .exp-right::-webkit-scrollbar-track { background: transparent; }
-        .exp-right::-webkit-scrollbar-thumb { background: var(--accent2); border-radius: 2px; }
+        .exp-right::-webkit-scrollbar-thumb { 
+          background: var(--accent2); 
+          border-radius: 2px; 
+        }
         .exp-item {
-          padding: 24px;
-          background: var(--white);
-          border: 1px solid var(--border);
-          border-radius: 12px;
-          display: flex; flex-direction: column; gap: 14px;
-          transition: transform 0.4s var(--ease), box-shadow 0.4s var(--ease);
+          padding: 28px;
+          background: #FFFFFF;
+          border: 1.5px solid rgba(123,29,29,0.15);
+          border-radius: 16px;
+          display: flex; 
+          flex-direction: column; 
+          gap: 16px;
+          transition: transform 0.4s var(--ease), 
+                      box-shadow 0.4s var(--ease),
+                      border-color 0.4s ease;
           flex-shrink: 0;
+          box-shadow: 0 4px 20px rgba(123,29,29,0.06);
         }
         .exp-item:hover {
           transform: translateX(6px);
-          box-shadow: 0 8px 32px rgba(123,29,29,0.08);
+          box-shadow: 0 12px 40px rgba(123,29,29,0.12);
+          border-color: var(--accent2);
         }
-        .exp-item-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; flex-wrap: wrap; }
-        .exp-role { font-family: var(--font-d); font-size: 16px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
-        .exp-co { display: flex; align-items: center; gap: 8px; font-size: 13px; }
+        .exp-item-top { 
+          display: flex; 
+          justify-content: space-between; 
+          align-items: flex-start; 
+          gap: 16px; 
+          flex-wrap: wrap; 
+        }
+        .exp-role { 
+          font-family: var(--font-d); 
+          font-size: 16px; 
+          font-weight: 700; 
+          color: var(--text); 
+          margin-bottom: 4px; 
+        }
+        .exp-co { 
+          display: flex; 
+          align-items: center; 
+          gap: 8px; 
+          font-size: 13px; 
+        }
         .co-name { color: var(--accent); font-weight: 600; }
         .co-sep { color: var(--muted); }
         .co-loc { color: var(--muted); }
-        .exp-right-meta { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
-        .exp-period { font-size: 12px; font-weight: 600; color: var(--muted); }
-        .exp-status { font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 100px; }
-        .exp-status.current { background: rgba(34,197,94,0.1); color: #16a34a; }
-        .exp-status.done { background: rgba(123,29,29,0.1); color: var(--accent); }
-        .exp-points { list-style: none; display: flex; flex-direction: column; gap: 8px; }
-        .exp-points li { display: flex; gap: 10px; font-size: 13px; color: var(--muted); line-height: 1.7; }
-        .pt-arrow { color: var(--accent2); font-weight: 700; flex-shrink: 0; }
-        .exp-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+        .exp-right-meta { 
+          display: flex; 
+          flex-direction: column; 
+          align-items: flex-end; 
+          gap: 6px; 
+        }
+        .exp-period { 
+          font-size: 12px; 
+          font-weight: 600; 
+          color: var(--muted); 
+        }
+        .exp-status { 
+          font-size: 11px; 
+          font-weight: 700; 
+          padding: 4px 12px; 
+          border-radius: 100px; 
+        }
+        .exp-status.current { 
+          background: rgba(34,197,94,0.1); 
+          color: #16a34a; 
+        }
+        .exp-status.done { 
+          background: rgba(123,29,29,0.1); 
+          color: var(--accent); 
+        }
+        .exp-points { 
+          list-style: none; 
+          display: flex; 
+          flex-direction: column; 
+          gap: 10px; 
+        }
+        .exp-points li { 
+          display: flex; 
+          gap: 10px; 
+          font-size: 13px; 
+          color: var(--muted); 
+          line-height: 1.7; 
+        }
+        .pt-arrow { 
+          color: var(--accent2); 
+          font-weight: 700; 
+          flex-shrink: 0; 
+          margin-top: 2px;
+        }
+        .exp-tags { 
+          display: flex; 
+          flex-wrap: wrap; 
+          gap: 8px; 
+          padding-top: 4px;
+        }
         .pill {
-          display: inline-flex; padding: 5px 14px;
+          display: inline-flex; 
+          padding: 6px 16px;
           background: var(--bg-alt);
           border: 1px solid var(--border);
           border-radius: 100px;
-          font-size: 12px; font-weight: 500; color: var(--text);
+          font-size: 12px; 
+          font-weight: 500; 
+          color: var(--text);
           transition: all 0.3s;
         }
-        .pill:hover { background: var(--accent); border-color: var(--accent); color: var(--white); }
+        .pill:hover { 
+          background: var(--accent); 
+          border-color: var(--accent); 
+          color: #FFFFFF; 
+        }
         @media (max-width: 900px) {
-          .exp-layout { grid-template-columns: 1fr; height: auto; }
-          .exp-right { height: calc(100vh - 300px); }
+          .exp-layout { 
+            grid-template-columns: 1fr; 
+            height: auto; 
+          }
+          .exp-right { 
+            height: calc(100vh - 300px); 
+          }
         }
       `}</style>
     </div>
