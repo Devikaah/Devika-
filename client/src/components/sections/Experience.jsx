@@ -120,12 +120,14 @@ export default function Experience({ active, goTo }) {
       <style>{`
         .exp-inner { align-items: flex-start; padding-top: 120px; }
         .exp-layout {
-          display: grid;
-          grid-template-columns: 0.8fr 1.2fr;
-          gap: 80px;
-          width: 100%; max-width: 1200px;
-          margin: 0 auto;
-          padding-top: 60px;
+        display: grid;
+        grid-template-columns: 0.8fr 1.2fr;
+        gap: 40px;
+        width: 100%; max-width: 1200px;
+        margin: 0 auto;
+        padding-top: 40px;
+        height: calc(100vh - 160px);
+        overflow: hidden;
         }
         .exp-heading {
           font-family: var(--font-d);

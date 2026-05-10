@@ -50,26 +50,38 @@ export default function App() {
     return () => window.removeEventListener('keydown', onKey);
   }, [goTo]);
 
-  // Mouse wheel
-  useEffect(() => {
-    const onWheel = (e) => {
-      const target = e.target;
-      const scrollable = target.closest('.section-inner');
 
-      if (scrollable) {
-        const atBottom = scrollable.scrollTop + scrollable.clientHeight >= scrollable.scrollHeight - 5;
-        const atTop = scrollable.scrollTop <= 5;
-        if (e.deltaY > 0 && !atBottom) return;
-        if (e.deltaY < 0 && !atTop) return;
+ // Mouse wheel
+useEffect(() => {
+  let lastScroll = 0;
+  const onWheel = (e) => {
+    const target = e.target;
+    const scrollable = target.closest('.section-inner');
+
+    if (scrollable) {
+      const atBottom = scrollable.scrollTop + scrollable.clientHeight >= scrollable.scrollHeight - 10;
+      const atTop = scrollable.scrollTop <= 10;
+
+      if (e.deltaY > 0 && !atBottom) {
+        scrollable.scrollTop += e.deltaY;
+        return;
       }
+      if (e.deltaY < 0 && !atTop) {
+        scrollable.scrollTop += e.deltaY;
+        return;
+      }
+    }
 
-      e.preventDefault();
-      if (e.deltaY > 20)  goTo(currentRef.current + 1);
-      if (e.deltaY < -20) goTo(currentRef.current - 1);
-    };
-    window.addEventListener('wheel', onWheel, { passive: false });
-    return () => window.removeEventListener('wheel', onWheel);
-  }, [goTo]);
+    const now = Date.now();
+    if (now - lastScroll < 1200) return;
+    lastScroll = now;
+
+    if (e.deltaY > 40)  goTo(currentRef.current + 1);
+    if (e.deltaY < -40) goTo(currentRef.current - 1);
+  };
+  window.addEventListener('wheel', onWheel, { passive: true });
+  return () => window.removeEventListener('wheel', onWheel);
+}, [goTo]);
 
   // Touch swipe
   useEffect(() => {
