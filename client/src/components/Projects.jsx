@@ -49,7 +49,7 @@ const projects = [
     description:
       'Designed and developed a user-friendly online doctor appointment booking system. Created the UI/UX in Figma, built the frontend with Next.js, and managed appointment scheduling data with MySQL. Improved usability through user testing sessions.',
     impact: 'Streamlined appointment scheduling, reducing manual booking effort significantly.',
-    image: null,
+    image:'/images/curzy.jpeg' ,
     placeholder: { icon: '🏥', label: 'Curezy' },
     tags: ['Next.js', 'MySQL', 'Figma', 'UI/UX Design'],
     color: '#a78bfa',
