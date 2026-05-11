@@ -50,59 +50,94 @@ export default function App() {
     return () => window.removeEventListener('keydown', onKey);
   }, [goTo]);
 
+  // Mouse wheel
+  useEffect(() => {
+    let lastScroll = 0;
+    const onWheel = (e) => {
+      const target = e.target;
+      const scrollable = target.closest('.section-inner');
 
- // Mouse wheel
-useEffect(() => {
-  let lastScroll = 0;
-  const onWheel = (e) => {
-    const target = e.target;
-    const scrollable = target.closest('.section-inner');
+      if (scrollable) {
+        const atBottom = scrollable.scrollTop + scrollable.clientHeight >= scrollable.scrollHeight - 10;
+        const atTop = scrollable.scrollTop <= 10;
 
-    if (scrollable) {
-      const atBottom = scrollable.scrollTop + scrollable.clientHeight >= scrollable.scrollHeight - 10;
-      const atTop = scrollable.scrollTop <= 10;
-
-      if (e.deltaY > 0 && !atBottom) {
-        scrollable.scrollTop += e.deltaY;
-        return;
+        if (e.deltaY > 0 && !atBottom) {
+          scrollable.scrollTop += e.deltaY;
+          return;
+        }
+        if (e.deltaY < 0 && !atTop) {
+          scrollable.scrollTop += e.deltaY;
+          return;
+        }
       }
-      if (e.deltaY < 0 && !atTop) {
-        scrollable.scrollTop += e.deltaY;
-        return;
-      }
-    }
 
-    const now = Date.now();
-    if (now - lastScroll < 1200) return;
-    lastScroll = now;
+      const now = Date.now();
+      if (now - lastScroll < 1200) return;
+      lastScroll = now;
 
-    if (e.deltaY > 40)  goTo(currentRef.current + 1);
-    if (e.deltaY < -40) goTo(currentRef.current - 1);
-  };
-  window.addEventListener('wheel', onWheel, { passive: true });
-  return () => window.removeEventListener('wheel', onWheel);
-}, [goTo]);
+      if (e.deltaY > 40)  goTo(currentRef.current + 1);
+      if (e.deltaY < -40) goTo(currentRef.current - 1);
+    };
+    window.addEventListener('wheel', onWheel, { passive: true });
+    return () => window.removeEventListener('wheel', onWheel);
+  }, [goTo]);
 
   // Touch swipe
   useEffect(() => {
     let startY = 0;
     let startX = 0;
+    let isSwiping = false;
+
     const onStart = (e) => {
       startY = e.touches[0].clientY;
       startX = e.touches[0].clientX;
+      isSwiping = false;
     };
+
+    const onMove = (e) => {
+      if (!startY) return;
+      const dy = startY - e.touches[0].clientY;
+      const dx = startX - e.touches[0].clientX;
+
+      const scrollable = e.target.closest('.section-inner');
+      if (scrollable) {
+        const atBottom = scrollable.scrollTop + scrollable.clientHeight >= scrollable.scrollHeight - 10;
+        const atTop = scrollable.scrollTop <= 10;
+        if (dy > 0 && !atBottom) return;
+        if (dy < 0 && !atTop) return;
+      }
+
+      if (Math.abs(dy) > Math.abs(dx) && Math.abs(dy) > 60) {
+        isSwiping = true;
+      }
+    };
+
     const onEnd = (e) => {
       const dy = startY - e.changedTouches[0].clientY;
       const dx = startX - e.changedTouches[0].clientX;
-      if (Math.abs(dy) > Math.abs(dx)) {
-        if (dy > 40)  goTo(currentRef.current + 1);
-        if (dy < -40) goTo(currentRef.current - 1);
+
+      const scrollable = e.target.closest('.section-inner');
+      if (scrollable) {
+        const atBottom = scrollable.scrollTop + scrollable.clientHeight >= scrollable.scrollHeight - 10;
+        const atTop = scrollable.scrollTop <= 10;
+        if (dy > 0 && !atBottom) return;
+        if (dy < 0 && !atTop) return;
       }
+
+      if (Math.abs(dy) > Math.abs(dx) && Math.abs(dy) > 60) {
+        if (dy > 0) goTo(currentRef.current + 1);
+        if (dy < 0) goTo(currentRef.current - 1);
+      }
+      startY = 0;
+      isSwiping = false;
     };
-    window.addEventListener('touchstart', onStart);
-    window.addEventListener('touchend', onEnd);
+
+    window.addEventListener('touchstart', onStart, { passive: true });
+    window.addEventListener('touchmove', onMove, { passive: true });
+    window.addEventListener('touchend', onEnd, { passive: true });
     return () => {
       window.removeEventListener('touchstart', onStart);
+      window.removeEventListener('touchmove', onMove);
       window.removeEventListener('touchend', onEnd);
     };
   }, [goTo]);
