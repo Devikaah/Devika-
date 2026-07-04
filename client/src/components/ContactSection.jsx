@@ -76,19 +76,19 @@ export default function ContactSection() {
                 Let&apos;s<br />Work<br />Together
               </h2>
               <p style={{ color: '#555', fontSize: 14, fontWeight: 300, lineHeight: 1.8, marginBottom: 32, maxWidth: 360 }}>
-                Looking for Data Analyst opportunities — full-time roles, internships, and freelance projects. Let's connect!
-              </p>
+                Seeking opportunities as a Data Analyst or BI Developer. Passionate about transforming data into actionable insights using Power BI, Python, SQL, and Tableau. Open to full-time roles, internships, and freelance projects.              </p>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                 {[
-                  { icon: '✉', label: 'Email', val: 'devikakg22@gmail.com', href: 'mailto:devikakg22@gmail.com' },
-                  { icon: '💼', label: 'LinkedIn', val: 'linkedin.com/in/devika-kg', href: 'https://linkedin.com/in/devika-kg' },
-                  { icon: '🐙', label: 'GitHub', val: 'github.com/Devikaah', href: 'https://github.com/Devikaah' },
-                  { icon: '📍', label: 'Location', val: 'Kochi, Kerala, India', href: null },
-                ].map(item => (
+                   { icon: '📄', label: 'Resume', val: 'Download Resume', href: '/Devika_KG_Resume.pdf' },
+                   { icon: '✉', label: 'Email', val: 'devikakg22@gmail.com', href: 'mailto:devikakg22@gmail.com' },
+                   { icon: '💼', label: 'LinkedIn', val: 'linkedin.com/in/devika-kg', href: 'https://linkedin.com/in/devika-kg' },
+                   { icon: '🐙', label: 'GitHub', val: 'github.com/Devikaah', href: 'https://github.com/Devikaah' },
+                   { icon: '📍', label: 'Location', val: 'Kochi, Kerala, India', href: null },
+                 ].map(item => (
                   <a
                     key={item.label}
                     href={item.href || undefined}
-                    target={item.href && !item.href.startsWith('mailto') ? '_blank' : undefined}
+                    target={item.href ? '_blank' : undefined}                    
                     rel="noreferrer"
                     data-hover
                     style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '12px 16px', background: '#111', border: '1px solid #1a1a1a', borderRadius: 10, textDecoration: 'none', transition: 'border-color 0.3s', cursor: item.href ? 'none' : 'default' }}
@@ -184,10 +184,11 @@ export default function ContactSection() {
           </div>
           <div style={{ display: 'flex', gap: 20 }}>
             {[
-              { l: 'LinkedIn', h: 'https://linkedin.com/in/devika-kg' },
-              { l: 'GitHub', h: 'https://github.com/Devikaah' },
-              { l: 'Email', h: 'mailto:devikakg22@gmail.com' },
-            ].map(s => (
+               { l: 'Resume', h: '/Devika_KG_Resume.pdf' },
+               { l: 'LinkedIn', h: 'https://linkedin.com/in/devika-kg' },
+               { l: 'GitHub', h: 'https://github.com/Devikaah' },
+               { l: 'Email', h: 'mailto:devikakg22@gmail.com' },
+             ].map(s => (
               <a key={s.l} href={s.h} target={s.h.startsWith('mailto') ? undefined : '_blank'} rel="noreferrer" data-hover
                 style={{ fontSize: 13, color: '#333', textDecoration: 'none', fontFamily: 'Kanit, sans-serif', transition: 'color 0.2s' }}
                 onMouseEnter={e => e.currentTarget.style.color = '#D7E2EA'}
