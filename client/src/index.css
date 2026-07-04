@@ -1,128 +1,35 @@
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
-:root {
-  --bg: 20 10% 6%;
-  --surface: 20 10% 10%;
-  --text: 10 20% 94%;
-  --muted: 10 8% 55%;
-  --stroke: 350 15% 18%;
-  --accent1: #7B1D1D;
-  --accent2: #E8A598;
-  --accent3: #C4736A;
+html, body, #root {
+  background: #0C0C0C;
+  font-family: 'Kanit', sans-serif;
+  color: #D7E2EA;
+  overflow-x: clip;
 }
 
-html { scroll-behavior: smooth; }
-
-body {
-  font-family: 'Inter', sans-serif;
-  background: hsl(var(--bg));
-  color: hsl(var(--text));
-  overflow-x: hidden;
-  cursor: none;
-  -webkit-font-smoothing: antialiased;
-}
-
-@keyframes scroll-down {
-  0%   { transform: translateY(-100%); }
-  100% { transform: translateY(200%); }
-}
-@keyframes role-fade-in {
-  from { opacity: 0; transform: translateY(8px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-@keyframes marquee {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-50%); }
-}
-@keyframes pulse-dot {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.4; }
-}
-@keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-12px); }
-}
-@keyframes loader-up {
-  from { transform: translateY(100%); opacity: 0; }
-  to   { transform: translateY(0); opacity: 1; }
-}
-@keyframes loader-fill {
-  from { width: 0; }
-  to   { width: 100%; }
-}
-@keyframes shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
-}
-
-.animate-scroll-down { animation: scroll-down 1.5s ease-in-out infinite; }
-.animate-role-fade-in { animation: role-fade-in 0.4s ease-out forwards; }
-.animate-marquee { animation: marquee 40s linear infinite; }
-.animate-pulse-dot { animation: pulse-dot 2s ease-in-out infinite; }
-.animate-float { animation: float 4s ease-in-out infinite; }
-
-.accent-gradient {
-  background: linear-gradient(90deg, #7B1D1D 0%, #E8A598 50%, #C4736A 100%);
-}
-.accent-gradient-text {
-  background: linear-gradient(90deg, #E8A598 0%, #C4736A 100%);
+.hero-heading {
+  background: linear-gradient(180deg, #646973 0%, #BBCCD7 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
-.accent-border {
-  position: relative;
-}
-.accent-border::before {
-  content: '';
-  position: absolute;
-  inset: -1.5px;
-  border-radius: inherit;
-  background: linear-gradient(90deg, #7B1D1D, #E8A598, #C4736A);
-  z-index: -1;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-.accent-border:hover::before { opacity: 1; }
-
-.cursor-dot {
-  position: fixed;
-  width: 6px; height: 6px;
-  background: #E8A598;
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 99999;
-  transform: translate(-50%, -50%);
-}
-.cursor-ring {
-  position: fixed;
-  width: 36px; height: 36px;
-  border: 1px solid rgba(232,165,152,0.5);
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 99998;
-  transform: translate(-50%, -50%);
-  transition: width 0.35s ease, height 0.35s ease, background 0.3s, border-color 0.3s;
-}
-.cursor-ring.hovered {
-  width: 56px; height: 56px;
-  background: rgba(232,165,152,0.1);
-  border-color: #E8A598;
-}
-
-.noise-overlay {
-  position: fixed; inset: 0;
-  pointer-events: none; z-index: 9990; opacity: 0.025;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  background-size: 200px;
-}
 
 ::-webkit-scrollbar { width: 4px; }
-::-webkit-scrollbar-track { background: hsl(var(--bg)); }
-::-webkit-scrollbar-thumb { background: #7B1D1D; border-radius: 4px; }
-::-webkit-scrollbar-thumb:hover { background: #E8A598; }
+::-webkit-scrollbar-track { background: #0C0C0C; }
+::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
 
-@media (max-width: 768px) {
-  body { cursor: auto; }
-  .cursor-dot, .cursor-ring { display: none; }
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+.pulse-dot { animation: pulse-dot 2s ease-in-out infinite; }
+
+@keyframes loader-count {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+* { cursor: none !important; }
+@media (max-width: 640px) {
+  * { cursor: auto !important; }
 }
